@@ -1,0 +1,21 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Events
+    link(rel="stylesheet", href="/events.css")
+  body
+    include index
+
+    main
+      h1 Available Events
+      ul.event-list
+        each event in events
+          li.event-item
+            h2= event.title
+            p Description: #{event.description}
+            p Date: #{event.event_date}
+            p Time: #{event.event_time}
+            p Capacity: #{event.capacity}
+            a.btn(href=`/register/${event.event_id}`) Register
