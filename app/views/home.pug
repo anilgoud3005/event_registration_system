@@ -1,0 +1,49 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Event Registration System
+    link(rel="stylesheet", href="/home.css")
+  body
+    include index
+    main
+      section.hero
+        h1 Welcome to the Event Registration System!
+        p Easily search, register, and manage your events.
+        a.btn(href="/events") Find Events
+      section.key-features
+        h2 Key Features
+      section.features
+        .feature
+          h3 Search Events
+          p Discover events near you and filter based on your preferences.
+        .feature
+          h3 Easy Registration
+          p Register for events in just a few clicks, and get confirmation emails.
+        .feature
+          h3 Event Management
+          p Admins can create, edit, and manage events with ease.
+      section.reviews
+        h2 User Reviews
+        .reviews-container
+          .review
+            .review-header
+              h3 Anil Goud
+              p.rating ★★★★☆
+            .review-body
+              p "This platform made event registration so much easier. I was able to find exactly what I needed and sign up quickly!"
+          .review
+            .review-header
+              h3 Gopi Chandu
+              p.rating ★★★★★
+            .review-body
+              p "As an event organizer, this system saved me so much time. The user interface is intuitive, and it's easy to manage everything."
+          .review
+            .review-header
+              h3 Sai Kiran
+              p.rating ★★★☆☆
+            .review-body
+              p "Good system overall, but I think the search function could be improved a bit. Still, it’s very useful!"
+    footer
+      p &copy; 2025 Event Registration System
