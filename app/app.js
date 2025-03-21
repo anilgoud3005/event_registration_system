@@ -42,6 +42,23 @@ app.get("/events", function(req, res) {
 });
 
 
+app.get("/event/:id", function(req, res) {
+    let eventId = req.params.id;
+    let sql = "SELECT * FROM events WHERE event_id = ?";
+
+    db.query(sql, [eventId]).then(results => {
+        if (results.length > 0) {
+            res.render("event_detail", { event: results[0] });
+        } else {
+            res.status(404).send("Event not found");
+        }
+    }).catch(error => {
+        console.error("Error fetching event details:", error);
+        res.status(500).send("Database error");
+    });
+});
+
+
 
 
 // Create a route for root - /

@@ -85,4 +85,40 @@ body {
   button:hover {
     background: #0056b3;
   }
+
+  .event-detail {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    text-align: left;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .btn:hover {
+    background: #0056b3;
+  }
+  
+  .btn-back {
+    display: inline-block;
+    margin-left: 10px;
+    color: #555;
+    text-decoration: none;
+  }
+  
+  .btn-back:hover {
+    text-decoration: underline;
+  }
+  
   

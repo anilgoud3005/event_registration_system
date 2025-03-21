@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= event.title
+    link(rel="stylesheet", href="/events.css")
+  body
+    include index1
+
+    main
+      .event-detail
+        h1= event.title
+        p Description: #{event.description}
+        p Date: #{event.event_date}
+        p Time: #{event.event_time}
+        p Capacity: #{event.capacity}
+        p Location: #{event.location}
+        p Organizer: #{event.organizer}
+
+        a.btn(href=`/register/${event.event_id}`) Register Now
+        a.btn-back(href="/events") ← Back to Events
