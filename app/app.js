@@ -62,7 +62,10 @@ app.get("/event/:id", function(req, res) {
 app.get("/about", function(req, res) {
     res.render("about");
 });
-
+// Create a route for root - /
+app.get("/contact", function(req, res) {
+    res.render("contact");
+});
 
 
 
