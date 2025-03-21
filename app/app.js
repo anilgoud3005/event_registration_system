@@ -29,15 +29,18 @@ app.get("/db_test", function(req, res) {
 
 // Route to fetch events and render the events page
 app.get("/events", function(req, res) {
-    sql = "SELECT * FROM events"; // Assuming 'events' is your table name
-    db.query(sql).then(results => {
+    let searchQuery = req.query.search || "";
+    let sql = "SELECT * FROM events WHERE title LIKE ? OR description LIKE ?";
+
+    db.query(sql, [`%${searchQuery}%`, `%${searchQuery}%`]).then(results => {
         console.log(results);
-        res.render("events", { events: results });
+        res.render("events", { events: results, search: searchQuery });
     }).catch(error => {
         console.error("Error fetching events:", error);
         res.status(500).send("Database error");
     });
 });
+
 
 
 

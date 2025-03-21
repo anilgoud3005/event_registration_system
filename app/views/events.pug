@@ -10,6 +10,12 @@ html(lang="en")
 
     main
       h1 Available Events
+
+      // Search Form (Sends query to server)
+      form(method="GET", action="/events")
+        input(type="text", name="search", placeholder="Search events..." value=search)
+        button(type="submit") Search  
+
       ul.event-list
         each event in events
           li.event-item
