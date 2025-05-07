@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Reserve Spot for #{event.title}
+    link(rel="stylesheet", href="/register.css")
+  body
+    include index1
+    .auth-card
+      h1 Reserve: "#{event.title}"
+      if successMessage
+        p.success-message= successMessage
+      if errorMessage
+        p.error-message= errorMessage
+      form(method="POST", action=`/reservation/${event.event_id}`)
+        .form-group
+          label(for="email") Email
+          input#email(type="email", name="email", required)
+        button(type="submit") Confirm Reservation
+      .auth-footer
+        a(href=`/event/${event.event_id}`) ← Back to event details
+    footer
+      p &copy; 2025 Event Registration System
