@@ -1,5 +1,6 @@
 // Import express.js
 const express = require("express");
+const { User } = require("./models/user");
 
 // Create express app
 var app = express();
@@ -11,6 +12,35 @@ app.use(express.static("static"));
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
+
+
+const bodyParser = require('body-parser');
+
+const cookieParser = require("cookie-parser");
+const session = require('express-session');
+// Add static files location
+
+const bcrypt = require('bcryptjs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(express.static(__dirname));
+const oneDay = 1000 * 60 * 60 * 24;
+const sessionMiddleware = session({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false
+});
+app.use(sessionMiddleware);
+
+app.use((req, res, next) => {
+    // make a boolean available in every Pug template
+    res.locals.loggedIn = !!req.session.uid;
+    next();
+  });
+
+app.use(express.static("static"));
 
 // // Create a route for root - /
 // app.get("/", function(req, res) {
@@ -119,6 +149,50 @@ app.post('/signup', async (req, res) => {
         res.render('register', { errorMessage: 'Error inserting data into the database' });
     }
 });
+
+app.get("/login", function (req, res) {
+    try {
+        if (req.session.uid) {
+            res.redirect('/dashboard');
+        } else {
+            res.render('login');
+        }
+        res.end();
+    } catch (err) {
+        console.error("Error accessing root route:", err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Check submitted email and password pair
+app.post('/authenticate', async function (req, res) {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send('Email and password are required.');
+        }
+
+        var user = new User(email);
+        const uId = await user.getIdFromEmail();
+        if (!uId) {
+            return res.render('login',{ errorMessage: 'Invalid Email' });
+        }
+
+        const match = await user.authenticate(password);
+        if (!match) {
+            return res.render('login',{ errorMessage: 'Invalid Email' })
+        }
+
+        req.session.uid = uId;
+        req.session.loggedIn = true;
+        console.log(req.session.id);
+        res.redirect('/events');
+    } catch (err) {
+        console.error(`Error while authenticating user:`, err.message);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
