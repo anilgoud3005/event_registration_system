@@ -1,0 +1,35 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title All Registrations
+    link(rel="stylesheet", href="/admin_events.css")
+  body
+    include index
+
+    main.dashboard-section
+      h1 All Registrations
+      a.button.secondary(href="/admin_dashboard") ← Back to Dashboard
+
+      if registrations.length
+        table.events
+          thead
+            tr
+              th ID
+              th User
+              th Event
+              th Date
+          tbody
+            each reg in registrations
+              tr
+                td= reg.registration_id
+                td= reg.user_email
+                td= reg.event_title
+                td= reg.registration_date.toLocaleString()
+      else
+        p No registrations found.
+
+    footer
+      p &copy; 2025 Event Registration System

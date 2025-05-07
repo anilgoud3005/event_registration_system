@@ -413,7 +413,29 @@ app.get("/logout", (req, res) => {
     });
   });
 
+// Show all registrations
+app.get("/admin/registrations", requireAdmin, async (req, res) => {
+    try {
+      const sql = `
+        SELECT
+          r.registration_id,
+          u.email           AS user_email,
+          e.title           AS event_title,
+          r.registration_date
+        FROM registrations r
+        JOIN Users u        ON r.user_id  = u.id
+        JOIN events e       ON r.event_id = e.event_id
+        ORDER BY r.registration_date DESC
+      `;
+      const regs = await db.query(sql);
+      res.render("admin_registrations", { registrations: regs });
+    } catch (err) {
+      console.error("Error loading registrations:", err);
+      res.status(500).send("Database error");
+    }
+  });
   
+
 // Start server on port 3000
 app.listen(3000, function() {
     console.log(`Server running at http://127.0.0.1:3000/`);
