@@ -412,9 +412,19 @@ app.get("/logout", (req, res) => {
       res.redirect("/login");
     });
   });
-
+// Admin logout
+app.get("/admin_logout", (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Error destroying admin session:", err);
+        return res.status(500).send("Could not log out. Please try again.");
+      }
+      res.clearCookie("connect.sid");
+      res.redirect("/admin_login");
+    });
+  });
 // Show all registrations
-app.get("/admin/registrations", requireAdmin, async (req, res) => {
+app.get("/admin_registrations", requireAdmin, async (req, res) => {
     try {
       const sql = `
         SELECT
