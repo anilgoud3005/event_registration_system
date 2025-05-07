@@ -80,6 +80,14 @@ app.get("/goodbye", function(req, res) {
     res.send("Goodbye world!");
 });
 
+app.get("/login", function(req, res) {
+    res.render("login");
+});
+
+app.get("/register", function(req, res) {
+    res.render("register");
+});
+
 // Create a dynamic route for /hello/<name>, where name is any value provided by user
 // At the end of the URL
 // Responds to a 'GET' request
@@ -91,6 +99,26 @@ app.get("/hello/:name", function(req, res) {
     res.send("Hello " + req.params.name);
 });
 
+// create User api
+app.post('/signup', async (req, res) => {
+    const { email, password} = req.body;
+
+    try {
+        // Hash the password using bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Prepare SQL query
+        const sql = 'INSERT INTO Users(email, password) VALUES (?, ?)';
+        const values = [email, hashedPassword];
+        // Execute SQL query
+        await db.query(sql, values);
+
+        res.render('register', { successMessage: 'User created successfully' });
+    } catch (error) {
+        console.log(error)
+        res.render('register', { errorMessage: 'Error inserting data into the database' });
+    }
+});
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
