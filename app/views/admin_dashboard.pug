@@ -1,0 +1,38 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Admin Dashboard
+    link(rel="stylesheet", href="/styles.css")
+  body
+    include index
+
+    main.dashboard-section
+      h1 Admin Dashboard
+      p Welcome, admin!
+      a.button(href="/admin/logout") Logout
+      table.events
+        thead
+          tr
+            th ID
+            th Title
+            th Date
+            th Time
+            th Capacity
+            th Actions
+        tbody
+          each event in events
+            tr
+              td= event.event_id
+              td= event.title
+              td= event.event_date
+              td= event.event_time
+              td= event.capacity
+              td
+                a.action-link(href=`/admin/events/edit/${event.event_id}`) Edit
+                |  
+                a.action-link(href=`/admin/events/delete/${event.event_id}`) Delete
+
+    footer
+      p &copy; 2025 Event Registration System

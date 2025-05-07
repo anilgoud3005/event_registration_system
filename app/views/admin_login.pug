@@ -1,0 +1,28 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Admin Login
+    link(rel="stylesheet", href="/login.css")
+  body
+    include index
+
+    main.login-section
+      h1 Admin Login
+      if errorMessage
+        p.error-message= errorMessage
+      form(method="POST", action="/admin/authenticate")
+        .form-group
+          label(for="email") Email
+          input#email(type="email", name="email", placeholder="Admin email" required)
+        .form-group
+          label(for="password") Password
+          input#password(type="password", name="password", placeholder="Password" required)
+        .form-group
+          button(type="submit") Sign In
+      p
+        a(href="/login") Back to User Login
+
+    footer
+      p &copy; 2025 Event Registration System
