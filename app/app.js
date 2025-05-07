@@ -96,11 +96,92 @@ app.get("/goodbye", function(req, res) {
     res.send("Goodbye world!");
 });
 
+
+
+// Protect all /admin/* routes
+function requireAdmin(req, res, next) {
+    if (!req.session.adminId) {
+      return res.redirect("/admin_login");
+    }
+    next();
+  }
+  
+// ─── ADMIN AUTH & DASHBOARD ────────────────────────────────────────────────────
+
+// Admin login form
+app.get("/admin_login", (req, res) => {
+    if (req.session.adminId) {
+      return res.redirect("/admin_dashboard");
+    }
+    res.render("admin_login");
+  });
+  
+  // Handle admin login submission
+  app.post("/admin_authenticate", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.render("admin_login", { errorMessage: "Email and password are required." });
+      }
+  
+      const admin = new Admin(email);
+      const aId   = await admin.getIdFromEmail();
+      if (!aId) {
+        return res.render("admin_login", { errorMessage: "Invalid email or password." });
+      }
+  
+      admin.id = aId;
+      const match = await admin.authenticate(password);
+      if (!match) {
+        return res.render("admin_login", { errorMessage: "Invalid email or password." });
+      }
+  
+      req.session.adminId = aId;
+      console.log("Admin session ID:", req.session.id);
+      res.redirect("/admin_dashboard");
+    } catch (err) {
+      console.error("Error during admin authentication:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
+  // Middleware to protect admin routes
+  function requireAdmin(req, res, next) {
+    if (!req.session.adminId) {
+      return res.redirect("/admin_login");
+    }
+    next();
+  }
+  
+  // Admin dashboard (list of events)
+  app.get("/admin_dashboard", requireAdmin, async (req, res) => {
+    try {
+      const events = await db.query("SELECT * FROM events ORDER BY event_date, event_time");
+      res.render("admin_dashboard", { events });
+    } catch (err) {
+      console.error("Error loading admin dashboard:", err);
+      res.status(500).send("Database error");
+    }
+  });
+  
+  // Handle admin logout
+  app.get("/admin_logout", (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Error destroying admin session:", err);
+        return res.status(500).send("Could not log out. Please try again.");
+      }
+      res.clearCookie("connect.sid");
+      res.redirect("/admin_login");
+    });
+  });
+  
+
 // Show the login form (if not logged in) or redirect
 app.get("/login", function (req, res) {
     try {
         if (req.session.userId) {
-            res.redirect('/dashboard');
+            res.redirect('/events');
         } else {
             res.render('login');
         }
@@ -232,65 +313,26 @@ app.post("/send-message", async (req, res) => {
     }
   });
 
-  // show the admin login form (or redirect if already logged in)
-app.get("/admin/login", (req, res) => {
-    if (req.session.adminId) {
-      return res.redirect("/admin/dashboard");
-    }
-    res.render("admin_login");
-  });
-  
-  // handle admin login submissions
-  app.post("/admin/authenticate", async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.render("admin_login", { errorMessage: "Email and password are required." });
-      }
-  
-      const admin = new Admin(email);
-      const aId   = await admin.getIdFromEmail();
-      if (!aId) {
-        return res.render("admin_login", { errorMessage: "Invalid email or password." });
-      }
-  
-      admin.id = aId;
-      const match = await admin.authenticate(password);
-      if (!match) {
-        return res.render("admin_login", { errorMessage: "Invalid email or password." });
-      }
-  
-      req.session.adminId = aId;
-      console.log("Admin session ID:", req.session.id);
-      res.redirect("/admin/dashboard");
-    } catch (err) {
-      console.error("Error during admin authentication:", err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-  // admin dashboard (protected)
-  app.get("/admin/dashboard", async (req, res) => {
-    if (!req.session.adminId) {
-      return res.redirect("/admin/login");
-    }
-    try {
-      // e.g. load all events to manage
-      const events = await db.query("SELECT * FROM events");
-      res.render("admin_dashboard", { events });
-    } catch (err) {
-      console.error("Error loading admin dashboard:", err);
-      res.status(500).send("Database error");
-    }
-  });
-  
-  // handle admin logout
-  app.get("/admin/logout", (req, res) => {
-    delete req.session.adminId;
-    res.redirect("/admin/login");
-  });
+
+
+ 
   
 
+  
+
+  // handle user logout
+app.get("/logout", (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).send("Could not log out. Please try again.");
+      }
+      res.clearCookie("connect.sid"); // optional, but ensures the cookie is removed
+      res.redirect("/login");
+    });
+  });
+
+  
 // Start server on port 3000
 app.listen(3000, function() {
     console.log(`Server running at http://127.0.0.1:3000/`);

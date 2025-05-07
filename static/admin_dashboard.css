@@ -1,0 +1,81 @@
+.dashboard-section {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .dashboard-section h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .actions {
+    margin-bottom: 1.5rem;
+  }
+  
+  .actions .button {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #1877f2;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+  
+  .actions .button:hover {
+    background: #166fe5;
+  }
+  
+  .actions .secondary {
+    background: #555;
+  }
+  
+  .actions .secondary:hover {
+    background: #444;
+  }
+  
+  table.events {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table.events thead {
+    background-color: #f5f5f5;
+  }
+  
+  table.events th,
+  table.events td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  table.events tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  .action-link {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+    color: #1877f2;
+    text-decoration: none;
+  }
+  
+  .action-link:hover {
+    text-decoration: underline;
+  }
+  
+  .action-link.danger {
+    color: #e12d39;
+  }
+  
+  footer {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 0.8rem;
+    color: #777;
+  }

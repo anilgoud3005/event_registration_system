@@ -9,10 +9,12 @@ html(lang="en")
     include index
 
     main.login-section
-      h1 Admin Login
-      if errorMessage
-        p.error-message= errorMessage
-      form(method="POST", action="/admin/authenticate")
+      
+      form(method="POST", action="/admin_authenticate")
+
+        h1 Admin Login
+        if errorMessage
+          p.error-message= errorMessage
         .form-group
           label(for="email") Email
           input#email(type="email", name="email", placeholder="Admin email" required)
@@ -21,8 +23,8 @@ html(lang="en")
           input#password(type="password", name="password", placeholder="Password" required)
         .form-group
           button(type="submit") Sign In
-      p
-        a(href="/login") Back to User Login
+        p
+          a(href="/login") Back to User Login
 
     footer
       p &copy; 2025 Event Registration System
