@@ -1,0 +1,70 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    if event.event_id
+      title Edit Event ##{event.event_id}
+    else
+      title Create New Event
+    link(rel="stylesheet", href="/admin_event_form.css")
+  body
+    include index
+
+    main.dashboard-section.admin-event-form
+      if event.event_id
+        h1 Edit Event ##{event.event_id}
+      else
+        h1 Create New Event
+
+      form(method="POST", action=formAction)
+        .form-group
+          label(for="title") Title
+          input#title(
+            type="text",
+            name="title",
+            placeholder="Event title",
+            required,
+            value=event.title || ''
+          )
+        .form-group
+          label(for="description") Description
+          textarea#description(
+            name="description",
+            placeholder="Event description",
+            required
+          )= event.description || ''
+        .form-group
+          label(for="event_date") Date
+          input#event_date(
+            type="date",
+            name="event_date",
+            required,
+            value=event.event_date || ''
+          )
+        .form-group
+          label(for="event_time") Time
+          input#event_time(
+            type="time",
+            name="event_time",
+            required,
+            value=event.event_time || ''
+          )
+        .form-group
+          label(for="capacity") Capacity
+          input#capacity(
+            type="number",
+            name="capacity",
+            min="1",
+            required,
+            value=event.capacity || ''
+          )
+        .form-group
+          button(type="submit")= submitLabel
+
+      .actions
+        a.button.secondary(href="/admin/events") ← Back to Events
+
+    footer
+      p &copy; 2025 Event Registration System

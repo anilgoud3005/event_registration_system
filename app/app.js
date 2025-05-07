@@ -313,11 +313,92 @@ app.post("/send-message", async (req, res) => {
     }
   });
 
+// ─── EVENT CRUD UNDER /admin ──────────────────────────────────────────────────
 
-
- 
+// List all events (Read)
+app.get("/admin/events", requireAdmin, async (req, res) => {
+    try {
+      const events = await db.query(
+        "SELECT * FROM events ORDER BY event_date, event_time"
+      );
+      res.render("admin_events_list", { events });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Database error");
+    }
+  });
   
-
+  // Show “New Event” form (Create)
+  app.get("/admin/events/new", requireAdmin, (req, res) => {
+    res.render("admin_event_form", {
+      event: {},
+      formAction: "/admin/events/new",
+      submitLabel: "Create Event"
+    });
+  });
+  
+  // Handle “Create” submission
+  app.post("/admin/events/new", requireAdmin, async (req, res) => {
+    try {
+      const { title, description, event_date, event_time, capacity } = req.body;
+      await db.query(
+        `INSERT INTO events (title, description, event_date, event_time, capacity)
+           VALUES (?, ?, ?, ?, ?)`,
+        [title, description, event_date, event_time, capacity]
+      );
+      res.redirect("/admin/events");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Database error");
+    }
+  });
+  
+  // Show “Edit Event” form (Update)
+  app.get("/admin/events/edit/:id", requireAdmin, async (req, res) => {
+    try {
+      const [event] = await db.query(
+        "SELECT * FROM events WHERE event_id = ?",
+        [req.params.id]
+      );
+      if (!event) return res.status(404).send("Event not found");
+      res.render("admin_event_form", {
+        event,
+        formAction: `/admin/events/edit/${event.event_id}`,
+        submitLabel: "Update Event"
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Database error");
+    }
+  });
+  
+  // Handle “Update” submission
+  app.post("/admin/events/edit/:id", requireAdmin, async (req, res) => {
+    try {
+      const { title, description, event_date, event_time, capacity } = req.body;
+      await db.query(
+        `UPDATE events
+           SET title = ?, description = ?, event_date = ?, event_time = ?, capacity = ?
+         WHERE event_id = ?`,
+        [title, description, event_date, event_time, capacity, req.params.id]
+      );
+      res.redirect("/admin/events");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Database error");
+    }
+  });
+  
+  // Handle “Delete” (Delete)
+  app.get("/admin/events/delete/:id", requireAdmin, async (req, res) => {
+    try {
+      await db.query("DELETE FROM events WHERE event_id = ?", [req.params.id]);
+      res.redirect("/admin/events");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Database error");
+    }
+  });
   
 
   // handle user logout

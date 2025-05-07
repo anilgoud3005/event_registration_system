@@ -1,0 +1,68 @@
+/* Admin Events List */
+
+.dashboard-section {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  
+  .dashboard-section h1 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .actions {
+    margin-bottom: 1.5rem;
+  }
+  
+  .actions .button {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #1877f2;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+  
+  .actions .button.secondary {
+    background: #555;
+  }
+  
+  .actions .button:hover {
+    background: #166fe5;
+  }
+  
+  table.events {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table.events th,
+  table.events td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  table.events tbody tr:nth-child(even) {
+    background: #fafafa;
+  }
+  
+  .action-link {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+    color: #1877f2;
+    text-decoration: none;
+  }
+  
+  .action-link:hover {
+    text-decoration: underline;
+  }
+  
+  .action-link.danger {
+    color: #e12d39;
+  }
+  

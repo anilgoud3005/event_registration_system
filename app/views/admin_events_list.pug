@@ -1,0 +1,44 @@
+doctype html
+
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Manage Events
+    link(rel="stylesheet", href="/admin_events.css")
+  body
+    include index
+
+    main.dashboard-section
+      h1 Events Management
+      .actions
+        a.button(href="/admin/events/new") + New Event
+        a.button.secondary(href="/admin_logout") Logout
+
+      if events.length
+        table.events
+          thead
+            tr
+              th ID
+              th Title
+              th Date
+              th Time
+              th Capacity
+              th Actions
+          tbody
+            each ev in events
+              tr
+                td= ev.event_id
+                td= ev.title
+                td= ev.event_date
+                td= ev.event_time
+                td= ev.capacity
+                td
+                  a.action-link(href=`/admin/events/edit/${ev.event_id}`) Edit
+                  |
+                  a.action-link.danger(href=`/admin/events/delete/${ev.event_id}`) Delete
+      else
+        p No events found. Click “New Event” to add one.
+
+    footer
+      p &copy; 2025 Event Registration System
