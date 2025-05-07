@@ -1,4 +1,5 @@
 doctype html
+
 html(lang="en")
   head
     meta(charset="UTF-8")
@@ -14,15 +15,19 @@ html(lang="en")
         h1 Contact Us
         p We would love to hear from you! Feel free to reach out with any questions or feedback.
 
+      //– feedback messages
+      if successMessage
+        p.success-message= successMessage
+      if errorMessage
+        p.error-message= errorMessage
+
       .contact-info
         .info
           i.fas.fa-phone
           p +1 234 567 890
-          
         .info
           i.fas.fa-envelope
           p contact@eventregister.com
-
         .info
           i.fas.fa-map-marker-alt
           p 123 Event St, Event City, EC 12345
@@ -31,11 +36,27 @@ html(lang="en")
         h2 Send us a Message
         form(method="POST", action="/send-message")
           .form-group
-            input(type="text", name="name", placeholder="Your Name" required)
+            input(
+              type="text",
+              name="name",
+              placeholder="Your Name",
+              required,
+              value=name || ''
+            )
           .form-group
-            input(type="email", name="email", placeholder="Your Email" required)
+            input(
+              type="email",
+              name="email",
+              placeholder="Your Email",
+              required,
+              value=email || ''
+            )
           .form-group
-            textarea(name="message", placeholder="Your Message" required)
+            textarea(
+              name="message",
+              placeholder="Your Message",
+              required
+            )= message || ''
           .form-group
             button(type="submit") Send Message
 

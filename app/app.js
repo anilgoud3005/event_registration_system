@@ -209,6 +209,29 @@ app.post('/reservation/:eventId', async (req, res) => {
     }
 });
 
+// handle Contact Us submissions
+app.post("/send-message", async (req, res) => {
+    const { name, email, message } = req.body;
+  
+    // basic validation
+    if (!name || !email || !message) {
+      return res.render("contact", { 
+        errorMessage: "All fields are required.", 
+        name, email, message 
+      });
+    }
+  
+    try {
+      const sql = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)";
+      await db.query(sql, [name, email, message]);
+      res.render("contact", { successMessage: "Thanks for your message! We’ll be in touch shortly." });
+    } catch (err) {
+      console.error("Error saving contact message:", err);
+      res.render("contact", { errorMessage: "Sorry, something went wrong. Please try again later." });
+    }
+  });
+  
+
 // Start server on port 3000
 app.listen(3000, function() {
     console.log(`Server running at http://127.0.0.1:3000/`);
