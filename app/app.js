@@ -1,6 +1,7 @@
 // Import express.js
 const express = require("express");
 const { User } = require("./models/user");
+const { Admin } = require("./models/admin");
 
 // Create express app
 var app = express();
@@ -229,6 +230,64 @@ app.post("/send-message", async (req, res) => {
       console.error("Error saving contact message:", err);
       res.render("contact", { errorMessage: "Sorry, something went wrong. Please try again later." });
     }
+  });
+
+  // show the admin login form (or redirect if already logged in)
+app.get("/admin/login", (req, res) => {
+    if (req.session.adminId) {
+      return res.redirect("/admin/dashboard");
+    }
+    res.render("admin_login");
+  });
+  
+  // handle admin login submissions
+  app.post("/admin/authenticate", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.render("admin_login", { errorMessage: "Email and password are required." });
+      }
+  
+      const admin = new Admin(email);
+      const aId   = await admin.getIdFromEmail();
+      if (!aId) {
+        return res.render("admin_login", { errorMessage: "Invalid email or password." });
+      }
+  
+      admin.id = aId;
+      const match = await admin.authenticate(password);
+      if (!match) {
+        return res.render("admin_login", { errorMessage: "Invalid email or password." });
+      }
+  
+      req.session.adminId = aId;
+      console.log("Admin session ID:", req.session.id);
+      res.redirect("/admin/dashboard");
+    } catch (err) {
+      console.error("Error during admin authentication:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
+  // admin dashboard (protected)
+  app.get("/admin/dashboard", async (req, res) => {
+    if (!req.session.adminId) {
+      return res.redirect("/admin/login");
+    }
+    try {
+      // e.g. load all events to manage
+      const events = await db.query("SELECT * FROM events");
+      res.render("admin_dashboard", { events });
+    } catch (err) {
+      console.error("Error loading admin dashboard:", err);
+      res.status(500).send("Database error");
+    }
+  });
+  
+  // handle admin logout
+  app.get("/admin/logout", (req, res) => {
+    delete req.session.adminId;
+    res.redirect("/admin/login");
   });
   
 
